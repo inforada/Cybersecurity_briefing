@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Інструктаж з кібербезпеки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#101B2D; --navy-2:#16243B; --slate:#4A5A72;
+    --paper:#F4F6F9; --paper-2:#FFFFFF; --ink:#16202E;
+    --accent:#1D7A74; --accent-2:#2F6FED; --line:#DCE2EA; --radius:4px;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+  }
+  *{box-sizing:inherit; margin:0; padding:0;}
+  html{scroll-padding-top: var(--safe-t);}
+  html,body{height:100%;}
+  body{
+    background: var(--paper); color: var(--ink);
+    font-family:'Inter', sans-serif; font-size:16px; line-height:1.55;
+    padding-top: var(--safe-t); padding-bottom: var(--safe-b);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; letter-spacing:-0.01em; }
+
+  header.top{ background: var(--navy); color:#EAF0F8; padding: 28px 6vw 24px; }
+  header.top .inner{ max-width: 1080px; margin:0 auto; }
+  header.top .kicker{ font-size:13px; color:#8FB4C7; margin-bottom:10px; }
+  header.top h1{ font-size: clamp(26px, 3.2vw, 38px); font-weight:600; max-width:680px; }
+  header.top p{ max-width:620px; margin-top:10px; color:#B7C4D6; font-size:15px; }
+
+  nav.stepper{ display:flex; background: var(--navy-2); border-top:1px solid rgba(255,255,255,0.08); overflow-x:auto; }
+  nav.stepper .inner{ display:flex; max-width:1080px; margin:0 auto; width:100%; }
+  nav.stepper button{
+    flex:1 1 0; min-width:150px; background:none; border:none; color:#93A3B8;
+    font-family:'Inter', sans-serif; font-size:14px; padding:16px 14px; text-align:left;
+    cursor:pointer; border-bottom:3px solid transparent; display:flex; align-items:center; gap:10px;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  nav.stepper button .num{
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:13px;
+    width:22px; height:22px; border-radius:50%; border:1px solid #4A5A72;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  nav.stepper button.active{ color:#fff; border-bottom-color: var(--accent-2); }
+  nav.stepper button.active .num{ background: var(--accent-2); border-color: var(--accent-2); color:#fff; }
+  nav.stepper button.done .num{ background: var(--accent); border-color: var(--accent); color:#fff; }
+  nav.stepper button:focus-visible{ outline:2px solid var(--accent-2); outline-offset:-2px; }
+
+  main{ max-width:1080px; margin:0 auto; padding: 48px 6vw 80px; }
+  section.step{ display:none; }
+  section.step.active{ display:block; animation: rise .35s ease; }
+  @keyframes rise{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+  section.step h2{ font-size: clamp(22px,2.6vw,28px); font-weight:600; margin-bottom:6px; }
+  section.step .lede{ color: var(--slate); font-size:15px; margin-bottom:28px; max-width:70ch; }
+
+  .card{ background: var(--paper-2); border:1px solid var(--line); border-radius: var(--radius); padding:22px 24px; margin-bottom:16px; }
+  .card h3{ font-size:16px; font-weight:600; margin-bottom:8px; }
+  .card p{ color:#3C4A5C; font-size:14.5px; }
+
+  /* two-column rules */
+  .rules-grid{ display:grid; grid-template-columns: 1fr; gap:16px; }
+  @media (min-width: 760px){ .rules-grid{ grid-template-columns: 1fr 1fr; } }
+  .rules-col h3{ font-size:14px; text-transform:none; margin-bottom:2px; }
+  .rules-col.ok h3{ color:#146962; }
+  .rules-col.no h3{ color:#A3332B; }
+  ul.rules{ list-style:none; background: var(--paper-2); border:1px solid var(--line); border-radius: var(--radius); overflow:hidden; margin-top:10px; }
+  ul.rules li{ padding:13px 16px; border-bottom:1px solid var(--line); font-size:14.5px; }
+  ul.rules li:last-child{ border-bottom:none; }
+
+  .placeholder{
+    border:1.5px dashed #B9C3D1; border-radius: var(--radius); padding:22px;
+    background:#FBFCFE; color: var(--slate); font-size:14px;
+  }
+  .placeholder strong{ color: var(--ink); display:block; margin-bottom:4px; font-family:'Space Grotesk',sans-serif; font-size:14.5px; }
+
+  /* video grid */
+  .video-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width: 700px){ .video-grid{ grid-template-columns:1fr 1fr; } }
+  .video-card{ background: var(--paper-2); border:1px solid var(--line); border-radius: var(--radius); padding:18px; display:flex; gap:14px; }
+  .video-card .play{
+    flex-shrink:0; width:34px; height:34px; border-radius:50%; background: var(--navy);
+    display:flex; align-items:center; justify-content:center; text-decoration:none;
+  }
+  .video-card .play::after{ content:""; border-style:solid; border-width:6px 0 6px 10px; border-color:transparent transparent transparent #fff; margin-left:2px; }
+  .video-card .meta .t{ font-size:14.5px; font-weight:500; }
+  .video-card .meta .t a{ color: var(--ink); text-decoration:none; }
+  .video-card .meta .t a:hover{ color: var(--accent-2); }
+  .video-card .meta .l{ font-size:13px; color: var(--slate); margin-top:2px; }
+
+  .cta{
+    display:inline-flex; align-items:center; gap:8px; background: var(--accent-2); color:#fff;
+    font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:15px; padding:13px 22px;
+    border-radius: var(--radius); text-decoration:none; border:none; cursor:pointer;
+  }
+  .cta.ghost{ background:none; border:1px solid var(--line); color: var(--ink); }
+  .cta:disabled{ opacity:.4; cursor:default; }
+
+  .footer-nav{ display:flex; justify-content:space-between; margin-top:36px; padding-top:20px; border-top:1px solid var(--line); }
+  .footer-nav button{ font-family:'Inter', sans-serif; font-size:14px; font-weight:500; background:none; border:none; color: var(--accent-2); cursor:pointer; padding:8px 4px; }
+  .footer-nav button:disabled{ color:#B9C3D1; cursor:default; }
+
+  .checklist{ font-size:14px; color:var(--slate); margin-top:18px; }
+  .checklist li{ margin-bottom:6px; margin-left:18px; }
+
+  footer.site{
+    text-align:center; padding: 22px 6vw 28px; color: var(--slate); font-size:12.5px;
+    border-top:1px solid var(--line); margin-top:20px;
+  }
+
+  /* presentation viewer */
+  .deck{ position:relative; border-radius: 8px; overflow:hidden; }
+  .deck-slide{
+    position:relative; padding: 44px 7vw; min-height: 320px; display:flex; align-items:center;
+    color:#fff; overflow:hidden; background-size: cover;
+    transition: background .25s ease;
+  }
+  .deck-slide::before{
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(circle at 12% 15%, rgba(255,255,255,.16), transparent 45%),
+      radial-gradient(circle at 92% 88%, rgba(255,255,255,.12), transparent 40%);
+    pointer-events:none;
+  }
+  .deck-slide .icon{ position:absolute; right:5vw; top:50%; transform:translateY(-50%); width:120px; height:120px; opacity:.16; }
+  .deck-slide .icon svg{ width:100%; height:100%; stroke:#fff; fill:none; stroke-width:1.3; }
+  .deck-slide .content{ position:relative; max-width:640px; }
+  .deck-slide .tag{ font-size:12px; letter-spacing:.02em; color:rgba(255,255,255,.72); margin-bottom:10px; }
+  .deck-slide h3{ font-size: clamp(20px,2.6vw,27px); font-weight:600; margin-bottom:16px; max-width:70ch; color:#fff; }
+  .deck-slide ul{ list-style:none; max-width:62ch; }
+  .deck-slide ul li{ font-size:14.5px; color:rgba(255,255,255,.88); padding:7px 0 7px 20px; position:relative; }
+  .deck-slide ul li::before{ content:"—"; position:absolute; left:0; color:rgba(255,255,255,.55); }
+  .deck-controls{
+    display:flex; align-items:center; justify-content:space-between;
+    background: var(--navy-2); padding: 12px 6vw; gap:12px;
+  }
+  .deck-controls button{
+    background: rgba(255,255,255,0.08); border:none; color:#fff; width:36px; height:36px;
+    border-radius:50%; cursor:pointer; font-size:16px; flex-shrink:0;
+  }
+  .deck-controls button:disabled{ opacity:.3; cursor:default; }
+  .deck-controls .count{ font-size:13px; color:#93A3B8; font-family:'Space Grotesk',sans-serif; }
+  .deck-dots{ display:flex; gap:5px; flex:1; justify-content:center; flex-wrap:wrap; }
+  .deck-dots span{ width:6px; height:6px; border-radius:50%; background:#3C4C64; }
+  .deck-dots span.active{ background: var(--accent-2); }
+  .deck-source{ font-size:12.5px; color: var(--slate); margin-top:14px; }
+  .deck-source a{ color: var(--accent-2); }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --paper:#0D141F; --paper-2:#141E2C; --ink:#E7EDF5; --line:#26334A; --slate:#93A3B8; }
+    :root:not([data-theme="light"]) .placeholder{ background:#101928; }
+  }
+  :root[data-theme="dark"]{ --paper:#0D141F; --paper-2:#141E2C; --ink:#E7EDF5; --line:#26334A; --slate:#93A3B8; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="inner">
+    <div class="kicker">Обов'язковий інструктаж · Інформаційна безпека</div>
+    <h1>Інструктаж з кібербезпеки для співробітників</h1>
+    <p>Короткий інструктаж про те, що можна і чого не можна робити з робочими даними, та підсумкова перевірка знань. Займає близько 15 хвилин.</p>
+  </div>
+</header>
+
+<nav class="stepper"><div class="inner" id="stepper"></div></nav>
+
+<main>
+
+  <section class="step" data-step="0">
+    <h2>Навіщо цей інструктаж</h2>
+    <p class="lede">Підприємство нагадує співробітникам базові правила цифрової гігієни — це знижує ризик витоків, злому та шахрайства, спрямованого на співробітників.</p>
+
+    <div class="card">
+      <h3>Що буде далі</h3>
+      <p>Ви пройдете чотири короткі кроки: опис, презентація з правилами, навчальні відео та підсумковий тест. Після тесту результат фіксується автоматично — повторно проходити інструктаж не потрібно, поки не настане наступний період аудиту.</p>
+    </div>
+
+    <div class="rules-grid">
+      <div class="rules-col ok">
+        <h3>Можна</h3>
+        <ul class="rules">
+          <li>Користуватися корпоративним менеджером паролів і вмикати двофакторну автентифікацію</li>
+          <li>Повідомляти в IT про підозрілі листи та дзвінки, навіть якщо немає впевненості</li>
+          <li>Блокувати екран, коли відходите від робочого місця</li>
+          <li>Встановлювати оновлення ОС і програм, коли про це просить система</li>
+          <li>Перевіряти адресу відправника, перш ніж переходити за посиланням із листа</li>
+        </ul>
+      </div>
+      <div class="rules-col no">
+        <h3>Не можна</h3>
+        <ul class="rules">
+          <li>Передавати робочі паролі та доступи колегам або третім особам</li>
+          <li>Підключати невідомі USB-накопичувачі до робочих пристроїв</li>
+          <li>Переходити за посиланнями з листів, якщо відправник або тема викликають сумнів</li>
+          <li>Зберігати робочі паролі в браузері, нотатках або на стікерах</li>
+          <li>Обговорювати конфіденційну інформацію в публічних місцях і мережах Wi-Fi</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-nav">
+      <button disabled>Назад</button>
+      <button class="cta" onclick="goTo(1)">Далі: презентація</button>
+    </div>
+  </section>
+
+  <section class="step" data-step="1">
+    <h2>Презентація: основи кібергігієни</h2>
+    <p class="lede">Пролистайте короткий конспект — від базових понять до розпізнавання фішингу. Стрілками або крапками внизу можна переходити між слайдами.</p>
+
+    <div class="deck">
+      <div class="deck-slide" id="slideBody"></div>
+      <div class="deck-controls">
+        <button id="prevBtn" aria-label="Попередній слайд">‹</button>
+        <div class="deck-dots" id="dots"></div>
+        <span class="count" id="count"></span>
+        <button id="nextBtn" aria-label="Наступний слайд">›</button>
+      </div>
+    </div>
+    <p class="deck-source">Адаптовано за матеріалами відкритої презентації «Кібергігієна. Безпека в Інтернеті» — <a href="https://krkut.gov.ua/wp-content/uploads/2025/10/Презентація-Кібергігієна.-Безпека-в-Інтернеті.pdf" target="_blank" rel="noopener">джерело (PDF)</a></p>
+
+   
+
+    <div class="footer-nav">
+      <button class="cta ghost" onclick="goTo(0)">Назад</button>
+      <button class="cta" onclick="goTo(2)">Далі: відео</button>
+    </div>
+  </section>
+
+  <section class="step" data-step="2">
+    <h2>Відео з кібергігієни</h2>
+    <p class="lede">Короткі матеріали українською мовою — доповнюють презентацію прикладами з практики.</p>
+
+    <div class="video-grid">
+      <div class="video-card">
+        <a class="play" href="https://www.youtube.com/watch?v=JjP8XaVk-FM" target="_blank" rel="noopener"></a>
+        <div class="meta">
+          <div class="t"><a href="https://www.youtube.com/watch?v=JjP8XaVk-FM" target="_blank" rel="noopener">Фішинг, викрадення даних і параноя: як кібербезпеківці борються з хакерами</a></div>
+          <div class="l">DOU, рубрика «Х питань» · відео, ~10 хв</div>
+        </div>
+      </div>
+      <div class="video-card">
+        <a class="play" href="https://www.youtube.com/watch?v=1Dxuc6oKqFI" target="_blank" rel="noopener"></a>
+        <div class="meta">
+          <div class="t"><a href="https://www.youtube.com/watch?v=1Dxuc6oKqFI" target="_blank" rel="noopener">Як захистити свої персональні дані від кіберзлочинців</a></div>
+          <div class="l">YouTube · проєкт «Кібербезпека.UA», Кіберполіція України</div>
+        </div>
+      </div>
+    </div>
+    <p class="placeholder" style="margin-top:16px;">
+      <strong>Про посилання</strong>
+      Відео — на YouTube у відкритому доступі, дивитись можна без реєстрації чи входу в акаунт. Якщо у вас є власні пропозиції що до відео чи посилання на YouTube-плейлист — надішліть їх до сектору кібербезпеки та захисту інформаціїї, і додамо сюди ще карток.
+    </p>
+
+    <div class="footer-nav">
+      <button class="cta ghost" onclick="goTo(1)">Назад</button>
+      <button class="cta" onclick="goTo(3)">Далі: тест</button>
+    </div>
+  </section>
+
+  <section class="step" data-step="3">
+    <h2>Підсумковий тест</h2>
+    <p class="lede">Останній крок — короткий тест на основі презентації та відео. Результат фіксується автоматично.</p>
+
+    <div class="card">
+      <h3>Що потрапить у таблицю обліку</h3>
+      <ul class="checklist">
+        <li>ПІБ та робоча пошта співробітника</li>
+        <li>Дата і час проходження</li>
+        <li>Результат тесту (бали / пройдено-не пройдено)</li>
+      </ul>
+    </div>
+
+    <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSeZfjLJZ2JfEY530Otlz7h0dkyFdb1JlZQUyC1eSiI0wNRgHg/viewform?usp=sharing&ouid=114263822880587309097" id="formLink" target="_blank" rel="noopener">Перейти до тесту →</a>
+
+    <div class="footer-nav">
+      <button class="cta ghost" onclick="goTo(2)">Назад</button>
+      <button disabled></button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">Розроблено КП «ІНФО-РАДА-ДНІПРО»</footer>
+
+<script>
+  // top-level stepper
+  const steps = ["Вступ","Презентація","Відео","Тест"];
+  const stepper = document.getElementById('stepper');
+  steps.forEach((label, i) => {
+    const btn = document.createElement('button');
+    btn.innerHTML = `<span class="num">${i+1}</span><span>${label}</span>`;
+    btn.onclick = () => goTo(i);
+    stepper.appendChild(btn);
+  });
+  function goTo(i){
+    document.querySelectorAll('section.step').forEach(s => s.classList.toggle('active', Number(s.dataset.step) === i));
+    document.querySelectorAll('nav.stepper button').forEach((b, idx) => {
+      b.classList.toggle('active', idx === i);
+      b.classList.toggle('done', idx < i);
+    });
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+  goTo(0);
+
+  // presentation deck
+  const ICONS = {
+    shield: '<path d="M12 2 4 5v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/>',
+    building: '<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/>',
+    refresh: '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/>',
+    wifi: '<path d="M2 8.5a17 17 0 0 1 20 0"/><path d="M5.5 12.5a12 12 0 0 1 13 0"/><path d="M9 16.5a6.5 6.5 0 0 1 6 0"/><circle cx="12" cy="20" r="1"/>',
+    browser: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><circle cx="6.5" cy="6.5" r=".6"/><circle cx="9" cy="6.5" r=".6"/>',
+    key: '<circle cx="8" cy="14" r="4"/><path d="M11 11 20 2M17 5l2.5 2.5M14 8l2 2"/>',
+    users: '<circle cx="9" cy="8" r="3"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/><circle cx="18" cy="9" r="2.4"/><path d="M22 21c0-3-1.6-4.6-4-5.2"/>',
+    mask: '<path d="M4 9c0-3 3.5-5 8-5s8 2 8 5c0 5-3 10-8 10S4 14 4 9Z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/>',
+    hook: '<path d="M9 3v9a5 5 0 0 0 10 0"/><circle cx="9" cy="3" r="1.6"/>',
+    bug: '<rect x="8" y="7" width="8" height="11" rx="4"/><path d="M12 7V4M8 10H4M8 14H4M16 10h4M16 14h4M9 4l1.5 2M15 4l-1.5 2"/>'
+  };
+  const slides = [
+    { tag:"1 · Основи", icon:"shield", grad:"linear-gradient(135deg,#1D4E7A,#2F6FED)", title:"Що таке кібергігієна", bullets:[
+      "Набір щоденних звичок, які знижують ризик зараження, злому чи втрати даних",
+      "Порівнюють з особистою гігієною: прості регулярні дії замість одноразових заходів",
+      "Стосується не лише IT-відділу — це відповідальність кожного співробітника"
+    ]},
+    { tag:"2 · Організація", icon:"building", grad:"linear-gradient(135deg,#1D7A74,#2FA893)", title:"Базові організаційні заходи", bullets:[
+      "Чіткі політики роботи з паролями, пристроями та доступом",
+      "Стандартні процедури на випадок оновлень, бекапів та інцидентів",
+      "Регулярне навчання персоналу розпізнавати нові загрози",
+      "Моніторинг мережевої активності та резервне копіювання даних"
+    ]},
+    { tag:"3 · Пристрої", icon:"refresh", grad:"linear-gradient(135deg,#5B3EAD,#8B5CF6)", title:"Оновлення та антивірус", bullets:[
+      "Оновлення закривають вразливості, якими користуються зловмисники — вмикайте автооновлення",
+      "Антивірус блокує відомі загрози та підозрілу активність у реальному часі",
+      "Скануйте зовнішні накопичувачі перед відкриттям файлів"
+    ]},
+    { tag:"4 · Мережа", icon:"wifi", grad:"linear-gradient(135deg,#0E6E6E,#14B8A6)", title:"Firewall і Wi-Fi", bullets:[
+      "Мережевий екран фільтрує трафік і блокує небажані підключення",
+      "Використовуйте сучасне шифрування Wi-Fi (WPA2/WPA3), а не застаріле",
+      "Змінюйте заводські паролі маршрутизаторів і вимикайте віддалене адміністрування, якщо воно не потрібне"
+    ]},
+    { tag:"5 · Браузер і мобільні", icon:"browser", grad:"linear-gradient(135deg,#1E4E8C,#3B82F6)", title:"Безпечний браузер та мобільні пристрої", bullets:[
+      "Блокуйте спливаючі вікна та не зберігайте паролі в браузері",
+      "Видаляйте невикористані розширення, заходьте на сайти через HTTPS",
+      "Захищайте телефони й ноутбуки паролем та шифруванням даних"
+    ]},
+    { tag:"6 · Паролі", icon:"key", grad:"linear-gradient(135deg,#8A4B12,#D97706)", title:"Правила надійного пароля", bullets:[
+      "Мінімум 12 символів, без слів зі словника та особистих даних",
+      "Унікальний пароль для кожного облікового запису",
+      "Менеджер паролів знімає потребу запам'ятовувати десятки комбінацій"
+    ]},
+    { tag:"7 · Доступ", icon:"users", grad:"linear-gradient(135deg,#274B8C,#4F6FCF)", title:"Облікові записи", bullets:[
+      "Для щоденної роботи — стандартний обліковий запис, не адміністраторський",
+      "Права адміністратора — лише тоді, коли це справді потрібно",
+      "Менше прав означає менший збиток у разі компрометації пристрою"
+    ]},
+    { tag:"8 · Загрози", icon:"mask", grad:"linear-gradient(135deg,#8C2C3B,#C0394E)", title:"Соціальна інженерія та фішинг", bullets:[
+      "Зловмисник маніпулює людиною, а не системою — видає себе за когось надійного",
+      "Мета — змусити перейти за посиланням або відкрити заражений файл",
+      "Більшість кібератак починається саме з фішингового листа"
+    ]},
+    { tag:"9 · Різновиди", icon:"hook", grad:"linear-gradient(135deg,#A3332B,#E4573D)", title:"Види фішингу і ознаки підробки", bullets:[
+      "Spear phishing — цілеспрямована атака на конкретну людину чи відділ",
+      "Vishing і smishing — те саме, але через дзвінок або SMS",
+      "Тривожні прохання «терміново», дивні адреси й помилки в тексті — привід насторожитися"
+    ]},
+    { tag:"10 · Підсумок", icon:"bug", grad:"linear-gradient(135deg,#1D2C4E,#3A4B7A)", title:"Шкідливе ПЗ і головні висновки", bullets:[
+      "Ransomware шифрує дані та вимагає викуп, spyware — непомітно стежить за діями",
+      "Більшість атак — наслідок пропущених оновлень і людської неуважності, а не складних злочинів",
+      "Регулярні звички важливіші за складні системи захисту"
+    ]}
+  ];
+  let si = 0;
+  const slideBody = document.getElementById('slideBody');
+  const dotsEl = document.getElementById('dots');
+  const countEl = document.getElementById('count');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.onclick = () => renderSlide(i);
+    dotsEl.appendChild(d);
+  });
+
+  function renderSlide(i){
+    si = i;
+    const s = slides[si];
+    slideBody.style.background = s.grad;
+    slideBody.innerHTML = `
+      <div class="icon"><svg viewBox="0 0 24 24">${ICONS[s.icon]}</svg></div>
+      <div class="content">
+        <div class="tag">${s.tag}</div>
+        <h3>${s.title}</h3>
+        <ul>${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+      </div>`;
+    countEl.textContent = `${si+1} / ${slides.length}`;
+    [...dotsEl.children].forEach((d, idx) => d.classList.toggle('active', idx === si));
+    prevBtn.disabled = si === 0;
+    nextBtn.disabled = si === slides.length - 1;
+  }
+  prevBtn.onclick = () => renderSlide(Math.max(0, si-1));
+  nextBtn.onclick = () => renderSlide(Math.min(slides.length-1, si+1));
+  renderSlide(0);
+</script>
+
+</body>
+</html>
